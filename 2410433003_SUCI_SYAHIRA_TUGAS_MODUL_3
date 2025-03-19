@@ -1,0 +1,12 @@
+M = int(input("Masukkan modal awal: "))
+r = float(input("Masukkan suku bunga tahunan (%): "))
+T = int(input("Masukkan target investasi: "))
+
+tahun = 0
+
+while M < T:
+    tahun += 1
+    M += M * (r / 100)
+    print("Tahun ke-" + str(tahun) + ": Rp" + str(int(M)))
+
+print("Target tercapai dalam " + str(tahun) + " tahun!")
