@@ -1,0 +1,52 @@
+konversi_nilai = {
+    'A': 4.00,
+    'A-': 3.75,
+    'B+': 3.50,
+    'B': 3.00,
+    'B-': 2.75,
+    'C+': 2.50,
+    'C': 2.00,
+    'D': 1.00,
+    'E': 0.00
+}
+
+jml_mhs = int(input("Masukkan jumlah mahasiswa: "))
+jml_mk = int(input("Masukkan jumlah mata kuliah: "))
+
+print("\nMasukkan nilai huruf (bukan angka) dengan pilihan berikut:")
+print("A, A-, B+, B, B-, C+, C, D, E")
+
+data_mhs = []
+
+for i in range(jml_mhs):
+    print()
+    nama = input("Nama mahasiswa ke-" + str(i+1) + ": ")
+    nilai_mk = []
+    total = 0
+    for j in range(jml_mk):
+        huruf = input("  Nilai MK" + str(j+1) + ": ").upper()
+        while huruf not in konversi_nilai:
+            huruf = input("  Nilai tidak valid, masukkan ulang: ").upper()
+        angka = konversi_nilai[huruf]
+        nilai_mk.append(huruf)
+        total += angka
+    ip = total / jml_mk
+    data_mhs.append([nama, nilai_mk, ip])
+
+data_mhs.sort(key=lambda x: x[2], reverse=True)
+
+print()
+print("=================== TABEL NILAI MAHASISWA ===================")
+print("Nama\t\t", end="")
+for i in range(jml_mk):
+    print("MK" + str(i+1) + "\t", end="")
+print("IP")
+print("=============================================================")
+
+for mhs in data_mhs:
+    print(mhs[0], end="\t\t")
+    for nilai in mhs[1]:
+        print(nilai, end="\t")
+    print("{:.2f}".format(mhs[2]))
+
+print("=============================================================")
