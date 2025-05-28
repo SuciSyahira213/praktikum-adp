@@ -1,0 +1,32 @@
+def hitung_kecepatan_akhir(kecepatan_awal, percepatan, waktu):
+    
+    kecepatan_akhir = kecepatan_awal + (percepatan * waktu)
+    return kecepatan_akhir
+
+def hitung_jarak(kecepatan_awal, percepatan, waktu):
+   
+    jarak = (kecepatan_awal * waktu) + (0.5 * percepatan * (waktu ** 2))
+    return jarak
+
+def tampilkan_tabel(n, data):
+    print(f"===========================================================================")
+    print(f"{'n':<5}{'Kecepatan Awal':<20}{'Percepatan':<15}{'Waktu':<10}{'Kecepatan Akhir':<20}{'Jarak':<10}")
+    for i in range(n):
+        kecepatan_awal, percepatan, waktu = data[i]
+        kecepatan_akhir = hitung_kecepatan_akhir(kecepatan_awal, percepatan, waktu)
+        jarak = hitung_jarak(kecepatan_awal, percepatan, waktu)
+        print(f"{i+1:<5}{kecepatan_awal:<20}{percepatan:<15}{waktu:<10}{kecepatan_akhir:<20}{jarak:<10}")
+
+
+n = int(input("Masukkan jumlah data: "))
+data_input = []
+
+for i in range(n):
+    print(f"Data ke-{i+1}:")
+    kecepatan_awal = float(input("Masukkan kecepatan awal (m/s): "))
+    percepatan = float(input("Masukkan percepatan (m/s^2): "))
+    waktu = float(input("Masukkan waktu (s): "))
+    data_input.append((kecepatan_awal, percepatan, waktu))
+
+
+tampilkan_tabel(n, data_input)
