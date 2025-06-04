@@ -1,0 +1,51 @@
+def hitung_nilai_total(pengalaman, wawancara, pilihan):
+    skor = 0
+    pengalaman_list = pengalaman.split(';')
+    for p in pengalaman_list:
+        bagian = p.split('-')
+        if len(bagian) == 2:
+            bidang, peran = bagian
+            if peran.lower().strip() == 'ketua':
+                skor += 2
+            if bidang.lower().strip() == pilihan.lower().strip():
+                skor += 3
+    return (int(wawancara) + skor) * 100
+
+# Buka file
+file = open("OrPSB22.txt", "r")
+data = file.readlines()
+file.close()
+
+# Simpan data berdasarkan pilihan bidang
+presidium = {}  # Dictionary: {bidang: [list data]}
+
+for baris in data[1:]:  # Lewati header
+    baris = baris.strip()
+    if not baris:
+        continue  # Lewati baris kosong
+    nama, nim, kelas, pengalaman, wawancara, pilihan = baris.split(',')
+
+    nilai = hitung_nilai_total(pengalaman, wawancara, pilihan)
+    calon = [nama.strip(), nim.strip(), int(nilai)]
+
+    bidang = pilihan.lower().strip()
+    if bidang not in presidium:
+        presidium[bidang] = []
+    presidium[bidang].append(calon)
+
+# Tampilkan 2 nilai tertinggi dari setiap bidang
+for bidang in presidium:
+    daftar_calon = presidium[bidang]
+
+    # Urutkan manual dari nilai tertinggi ke terendah (bubble sort)
+    n = len(daftar_calon)
+    for i in range(n):
+        for j in range(i + 1, n):
+            if daftar_calon[j][2] > daftar_calon[i][2]:
+                temp = daftar_calon[i]
+                daftar_calon[i] = daftar_calon[j]
+                daftar_calon[j] = temp
+
+    print("\nKoordinator untuk bidang", bidang.capitalize())
+    for i in range(min(2, len(daftar_calon))):
+        print("Nama:", daftar_calon[i][0], "| NIM:", daftar_calon[i][1], "| Nilai:", daftar_calon[i][2])
