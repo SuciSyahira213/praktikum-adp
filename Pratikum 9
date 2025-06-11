@@ -1,0 +1,25 @@
+from termcolor import colored, cprint
+
+# Mencetak logo Pertamina
+cprint(r'  __________________________________________________________  ', 'red')
+cprint(r' |                                                          | ', 'red')
+cprint(r' |        \\\\                                              |', 'red')
+cprint(r' |         \\\\   ', 'red', end=''), cprint(r'__   __  __  ___  __   _  _     _     __', 'black', end='') , cprint(r'  |', 'red')
+cprint(r' |    ////', 'blue', end=''), cprint(r' //// ', 'yellow', end='') , cprint(r' |__| |__ |__|  |  |__| | \/ | | | \ | |__| ', 'black', end='') , cprint(r'|', 'blue')
+cprint(r' |   //// ', 'blue', end=''), cprint(r'////  ', 'yellow', end='') , cprint(r' |    |__ | \   |  |  | |    | | |  \| |  | ', 'black', end='') , cprint(r'|', 'blue')
+cprint(r' |  ////                                                    | ', 'blue')
+cprint(r' | ////                                                     |', 'blue')
+cprint(r' |__________________________________________________________|', 'yellow')
+
+
+# Mencetak logo Adidas
+cprint(r'  ________________________ ', 'black')
+cprint(r' |                        | ', 'black')
+cprint(r' |               \\\\\    | ', 'black')
+cprint(r' |        \\\\\   \\\\\   | ', 'black')
+cprint(r' | \\\\\   \\\\\   \\\\\  | ', 'black')
+cprint(r' |  \\\\\   \\\\\   \\\\\ | ', 'black')
+cprint(r' |   _   _| .  _|  _   _  | ', 'black')
+cprint(r' |  / | / | | / | / | |_  | ', 'black')
+cprint(r' |  \_| \_| | \_| \_|  _| | ', 'black')
+cprint(r' |________________________| ', 'black')
