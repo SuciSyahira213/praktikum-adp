@@ -3,7 +3,6 @@ import os
 import time
 import cowsay
 import random
-import json
 
 def cls():
     os.system('cls' if os.name == 'nt' else 'clear')
@@ -58,45 +57,32 @@ def animasi_giliran(teks="Memproses giliran"):
         time.sleep(0.3)
         cls()
 
-def komputer_bermain(papan, kesulitan):
+def komputer_bermain(papan):
     kosong = [(i, j) for i in range(3) for j in range(3) if papan[i][j] == " "]
-    if kesulitan == "mudah":
-        return random.choice(kosong)
-    elif kesulitan == "sedang":
-        # Coba untuk menang atau blokir
-        for i, j in kosong:
-            papan[i][j] = "O"
-            if cek_menang(papan, "O"):
-                return (i, j)
-            papan[i][j] = " "
-        return random.choice(kosong)
-    else:  # sulit
-        # Implementasi AI yang lebih baik bisa ditambahkan di sini
-        return random.choice(kosong)
-
-def simpan_statistik(statistik):
-    with open("statistik.json", "w") as f:
-        json.dump(statistik, f)
-
-def muat_statistik():
-    if os.path.exists("statistik.json"):
-        with open("statistik.json", "r") as f:
-            return json.load(f)
-    return {"X": 0, "O": 0, "seri": 0}
-
-def tampilkan_statistik(statistik):
-    print(f"Statistik: Pemain X: {statistik['X']}, Pemain O: {statistik['O']}, Seri: {statistik['seri']}")
+    return random.choice(kosong)
 
 def menu_utama():
     print("=== Menu Utama ===")
-    print("1. Mulai Permainan")
-    print("2. Tampilkan Statistik")
-    print("3. Keluar")
+    print(colored("1. Main Dua Orang", 'green'))
+    print(colored("2. Main Melawan Komputer", 'green'))
+    print(colored("3. Keluar", 'green'))
     pilihan = input("Pilih opsi (1/2/3): ")
     return pilihan
 
+def tampilkan_ucapan(teks):
+    panjang_layar = 50  # Panjang layar untuk pergerakan
+    for i in range(panjang_layar):
+        cls()
+        # Menggunakan cowsay dengan latar belakang pink
+        print(" " * i + colored(cowsay.cow(teks), 'yellow', 'on_magenta'))  # Mengubah warna teks menjadi kuning
+        time.sleep(0.1)
+
+def tampilkan_statistik(statistik):
+    print("=== Statistik Permainan ===")
+    print(f"Pemain X: {statistik['X']}, Pemain O: {statistik['O']}, Seri: {statistik['seri']}")
+
 def main():
-    statistik = muat_statistik()
+    statistik = {"X": 0, "O": 0, "seri": 0}
     
     while True:
         pilihan = menu_utama()
@@ -104,22 +90,50 @@ def main():
         if pilihan == "1":
             papan = buat_papan()
             giliran = "X"
-            pemain_komputer = "O"
-            
-            simbol = input("Pilih simbol Anda (X/O): ").upper()
-            if simbol == "O":
-                giliran, pemain_komputer = pemain_komputer, giliran
-            
-            kesulitan = input("Pilih tingkat kesulitan (mudah/sedang/sulit): ").lower()
-            
+            while True:
+                tampilkan_papan(papan)
+                cprint(f"Giliran Pemain {giliran}", 'green', attrs=['bold'])
+                posisi = input("Masukkan posisi (contoh A1, B3): ").upper()
+
+                hasil = konversi_input(posisi)
+                if not hasil:
+                    cprint("Input tidak valid!", 'red')
+                    time.sleep(1)
+                    continue
+
+                baris, kolom = hasil
+                if papan[baris][kolom] != " ":
+                    cprint("Kursi sudah terisi.", 'red')
+                    time.sleep(1)
+                    continue
+
+                papan[baris][kolom] = giliran
+                animasi_giliran()
+
+                if cek_menang(papan, giliran):
+                    tampilkan_papan(papan)
+                    tampilkan_ucapan(f"🎉 Selamat! Pemain {giliran} MENANG!")
+                    statistik[giliran] += 1
+                    break
+                elif cek_seri(papan):
+                    tampilkan_papan(papan)
+                    cowsay.cow("⚖  Permainan SERI!")
+                    statistik["seri"] += 1
+                    break
+                else:
+                    giliran = "O" if giliran == "X" else "X"
+
+        elif pilihan == "2":
+            papan = buat_papan()
+            giliran = "X"
             while True:
                 tampilkan_papan(papan)
                 cprint(f"Giliran Pemain {giliran}", 'green', attrs=['bold'])
                 
-                if giliran == simbol:
+                if giliran == "X":
                     posisi = input("Masukkan posisi (contoh A1, B3): ").upper()
                 else:
-                    baris, kolom = komputer_bermain(papan, kesulitan)
+                    baris, kolom = komputer_bermain(papan)
                     posisi = f"{chr(65 + baris)}{kolom + 1}"
                     print(f"Komputer memilih posisi: {posisi}")
                     time.sleep(1)
@@ -141,7 +155,7 @@ def main():
 
                 if cek_menang(papan, giliran):
                     tampilkan_papan(papan)
-                    cowsay.cow(f"🎉 Pemain {giliran} MENANG!")
+                    tampilkan_ucapan(f"🎉 Selamat! Pemain {giliran} MENANG!")
                     statistik[giliran] += 1
                     break
                 elif cek_seri(papan):
@@ -150,19 +164,16 @@ def main():
                     statistik["seri"] += 1
                     break
                 else:
-                    giliran = pemain_komputer if giliran == simbol else simbol
-            
-            simpan_statistik(statistik)
-
-        elif pilihan == "2":
-            tampilkan_statistik(statistik)
+                    giliran = "O" if giliran == "X" else "X"
 
         elif pilihan == "3":
-            print("Terima kasih telah bermain!")
+            tampilkan_ucapan("Terima kasih telah bermain!")
             break
 
         else:
             print("Pilihan tidak valid. Silakan coba lagi.")
+
+        tampilkan_statistik(statistik)
 
 # Jalankan permainan
 main()
